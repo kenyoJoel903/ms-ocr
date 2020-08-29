@@ -26,7 +26,7 @@ public class OCRController {
 	private IOCRService service;
 	
 	@PostMapping
-	public ResponseEntity<Imagen> cargarImagen(@RequestParam("file") MultipartFile file) {
+	public ResponseEntity<Imagen> procesarImagen(@RequestParam("file") MultipartFile file) {
 		return new ResponseEntity(service.procesarImagen(file), HttpStatus.CREATED);
 	}
 	
