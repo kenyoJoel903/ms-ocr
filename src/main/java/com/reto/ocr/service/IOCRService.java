@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.reto.ocr.domain.Documento;
 import com.reto.ocr.domain.Imagen;
 
 public interface IOCRService {
@@ -13,5 +14,9 @@ public interface IOCRService {
 	List<Imagen> obtenerImagenesProcesadas();
 	
 	byte[] obtenerImagen(String idImagen);
+	
+	Documento procesarDocumento(MultipartFile file);
+	
+	List<Documento> obtenerDocumentos();
 
 }

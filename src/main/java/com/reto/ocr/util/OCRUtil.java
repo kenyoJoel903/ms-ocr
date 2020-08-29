@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import com.reto.ocr.domain.Documento;
 import com.reto.ocr.exception.AppException;
 
 import net.sourceforge.tess4j.ITesseract;
@@ -34,6 +35,22 @@ public class OCRUtil {
 			e.printStackTrace();
 			throw new AppException(e.getMessage());
 		}
+	}
+	
+	public static Documento procesarDNI(String texto) {
+		Documento documento = new Documento();
+		String[] dataTexto = texto.split(" ");
+		for (String data : dataTexto) {
+			if(data.length() == 8) {
+				try {
+					documento.setNroDNI(data);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		documento.setTexto(texto);
+		return documento;
 	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.reto.ocr.domain.Documento;
 import com.reto.ocr.domain.Imagen;
 import com.reto.ocr.service.IOCRService;
 
@@ -39,6 +40,17 @@ public class OCRController {
 	@GetMapping(path = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public @ResponseBody byte[] mostrarImagen(@PathVariable String id) {
 		return service.obtenerImagen(id);
+	}
+	
+	@PostMapping(path = "/dni")
+	public ResponseEntity<Documento> procesarDNI(@RequestParam("file") MultipartFile file) {
+		return new ResponseEntity(service.procesarDocumento(file), HttpStatus.CREATED);
+	}
+	
+	
+	@GetMapping(path = "/dni")
+	public ResponseEntity<List<Documento>> obtenerDNIS() {
+		return new ResponseEntity(service.obtenerDocumentos(), HttpStatus.OK);
 	}
 
 }

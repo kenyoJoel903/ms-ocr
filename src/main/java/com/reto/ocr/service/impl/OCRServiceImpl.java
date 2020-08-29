@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.reto.ocr.domain.Documento;
 import com.reto.ocr.domain.Imagen;
 import com.reto.ocr.exception.AppException;
+import com.reto.ocr.service.IDocumentoService;
 import com.reto.ocr.service.IImagenService;
 import com.reto.ocr.service.IOCRService;
 import com.reto.ocr.util.Lenguaje;
@@ -26,6 +28,9 @@ public class OCRServiceImpl implements IOCRService {
 	
 	@Autowired
 	private IImagenService imagenService;
+	
+	@Autowired
+	private IDocumentoService documentoService;
 	
 	@Value("${directorio.imagenes}")
 	private String pathDirectorio;
@@ -67,6 +72,33 @@ public class OCRServiceImpl implements IOCRService {
 		} catch (Exception e) {
 			throw new AppException(e.getMessage());
 		}
+	}
+
+	@Override
+	public Documento procesarDocumento(MultipartFile file) {
+		long tiempoInicio = Instant.now().toEpochMilli(); 
+		String[] nombreArchivo = file.getOriginalFilename().split("\\.");
+		String extension = nombreArchivo[nombreArchivo.length - 1];
+		String pathImagen = pathDirectorio.concat("/").concat(tiempoInicio + "").concat(".").concat(extension);
+		Documento documento;
+		try {
+			if(!OCRUtil.guardarImegenEnDirectorio(file.getBytes(), pathImagen))
+				throw new AppException("NO SE PUDO CARGAR LA IMAGEN");
+			String texto = OCRUtil.imagenToText(pathImagen, Lenguaje.ESP);
+			documento = OCRUtil.procesarDNI(texto);
+			documento.setUbicacion(pathImagen);
+			documento.setFechaProceso(LocalDateTime.now());
+			documentoService.registrar(documento);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AppException(e.getMessage());
+		}
+		return documento;
+	}
+
+	@Override
+	public List<Documento> obtenerDocumentos() {
+		return documentoService.listarTodos();
 	}
 
 }
