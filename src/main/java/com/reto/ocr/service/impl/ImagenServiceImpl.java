@@ -28,7 +28,7 @@ public class ImagenServiceImpl implements IImagenService{
 	}
 
 	@Override
-	public Imagen buscarImagen(String id) {
+	public Imagen buscar(String id) {
 		Optional<Imagen> optImagen = repository.findById(id);
 		if(!optImagen.isPresent())
 			throw new ModeloNotFoundException("Imagen no encontrada " + id);

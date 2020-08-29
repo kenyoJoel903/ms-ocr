@@ -61,7 +61,7 @@ public class OCRServiceImpl implements IOCRService {
 	@Override
 	public byte[] obtenerImagen(String idImagen) {
 		try {
-			File imagenFile = new File(imagenService.buscarImagen(idImagen).getUbicacion());
+			File imagenFile = new File(imagenService.buscar(idImagen).getUbicacion());
 			InputStream imagenIs = new FileInputStream(imagenFile);
 			return IOUtils.toByteArray(imagenIs);
 		} catch (Exception e) {
